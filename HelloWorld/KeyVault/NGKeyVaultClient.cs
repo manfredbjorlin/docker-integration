@@ -10,6 +10,7 @@ public static class NGKeyVaultClient
             {
                 "ServiceBusQueueName" => "testqueue",
                 "ServiceBusNamespace" => "ngsbtest.servicebus.windows.net",
+                "VaultUri" => "https://ng-keyvault-test.vault.azure.net/",
                 _ => "Wut?"
             };
 
