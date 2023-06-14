@@ -50,7 +50,6 @@ app.MapPost("/Send", ([FromBody]PersonExample person) =>
         Description = "When you write a text it is magically sent to a queue!!!"
     });
 
-
 // If there is a polling - add a ms delay. Timeout.Infinite will make the timer never start
 
 _ = new NGTimerService(pollingDelayMs: Timeout.Infinite,
@@ -59,6 +58,8 @@ _ = new NGTimerService(pollingDelayMs: Timeout.Infinite,
 
 // EDIT ABOVE THIS LINE
 // *****************************************************************************************************************************************************
+
+// TODO: KeyVaultClient is not done
 
 app.Run();
 
