@@ -16,6 +16,6 @@ public static class NGKeyVaultClient
 
         var client = new SecretClient(vaultUri: new Uri(VaultUri), credential: new DefaultAzureCredential());
 
-        return client.GetSecret($"{ApplicationName}__{name}").Value.Value;
+        return client.GetSecret($"{ApplicationName}--{name}").Value.Value;
     } 
 }
