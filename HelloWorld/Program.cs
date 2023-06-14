@@ -40,6 +40,8 @@ app.MapGet("/", () => "You shouldn't be here!")
 // *****************************************************************************************************************************************************
 // EDIT BELOW THIS LINE
 
+// Use serviceBusClient to send to a ServiceBus queue
+
 app.MapPost("/Send", ([FromBody]PersonExample person) =>
 {
     serviceBusClient.PostMessage(new[] {JsonSerializer.Serialize(person)});
