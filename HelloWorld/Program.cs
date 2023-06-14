@@ -64,5 +64,5 @@ _ = new NGTimerService(pollingDelayMs: Timeout.Infinite,
 
 app.Run();
 
-// This is needed for the test project
+// NO NOT REMOVE - This is needed for the test project
 public partial class Program { }
