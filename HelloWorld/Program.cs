@@ -51,9 +51,9 @@ app.MapPost("/Send", ([FromBody]PersonExample person) =>
     });
 
 
-// If there is a polling:
+// If there is a polling - add a ms delay. Timeout.Infinite will make the timer never start
 
-var ngTimerService = new NGTimerService(pollingDelayMs: 10000,
+var ngTimerService = new NGTimerService(pollingDelayMs: Timeout.Infinite,
                                         inputHandler: new TimerHandler(serviceBusClient).HandleMessage,
                                         cancellationToken);
 
