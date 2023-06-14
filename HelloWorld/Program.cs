@@ -50,9 +50,17 @@ app.MapPost("/Send", ([FromBody]PersonExample person) =>
         Description = "When you write a text it is magically sent to a queue!!!"
     });
 
+
+// If there is a polling:
+
+var ngTimerService = new NGTimerService(pollingDelayMs: 1000,
+                                        inputHandler: new TimerHandler(serviceBusClient).HandleMessage,
+                                        cancellationToken);
+
 // EDIT ABOVE THIS LINE
 // *****************************************************************************************************************************************************
 
 app.Run();
 
+// This is needed for the test project
 public partial class Program { }
