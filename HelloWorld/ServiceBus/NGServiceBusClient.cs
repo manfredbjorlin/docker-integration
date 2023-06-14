@@ -43,6 +43,8 @@ public class NGServiceBusClient
                     _sender.DisposeAsync();
                     _processor.DisposeAsync();
                     _client.DisposeAsync();
+
+                    NGLogger.WriteInfo("ServiceBus Client disposed...");
                 }
             },
             null,
