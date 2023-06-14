@@ -1,15 +1,20 @@
+
+
 public static class NGKeyVaultClient
 {
     public static string? ApplicationName;
-    public static string GetSecret(string name)
+    public static string GetSecret(string name, string VaultUri, bool isDevelopment = false)
     {
-        // Get from KeyVault : Get($"{ApplicationName}__{name}") 
+        if(isDevelopment)
+            return name switch
+            {
+                "ServiceBusQueueName" => "testqueue",
+                "ServiceBusNamespace" => "ngsbtest.servicebus.windows.net",
+                _ => "Wut?"
+            };
 
-        return name switch
-        {
-            "ServiceBusQueueName" => "testqueue",
-            "ServiceBusNamespace" => "ngsbtest.servicebus.windows.net",
-            _ => "Wut?"
-        };
+        var client = new SecretClient(vaultUri: new Uri(VaultUri), credential: new DefaultAzureCredential());
+
+        return client.GetSecret($"{ApplicationName}__{name}").Value.Value;
     } 
 }

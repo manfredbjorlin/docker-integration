@@ -21,10 +21,12 @@ app.Lifetime.ApplicationStopped.Register(() => NGLogger.WriteInfo("Application s
 app.UseSwagger();
 app.UseSwaggerUI();
 
+var keyVaultUri = app.Configuration.GetValue<string>("VaultUri");
+
 var serviceBusClient = new NGServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
-    queueName: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueName"),
-    queueNamespace: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusEndpoint")! : NGKeyVaultClient.GetSecret("ServiceBusNamespace"),
+    queueName: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueName", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNamespace: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusEndpoint")! : NGKeyVaultClient.GetSecret("ServiceBusNamespace", keyVaultUri!, app.Environment.IsDevelopment()),
     isDevelopment: app.Environment.IsDevelopment(),
     cancellationToken);
 
@@ -58,8 +60,6 @@ _ = new NGTimerService(pollingDelayMs: Timeout.Infinite,
 
 // EDIT ABOVE THIS LINE
 // *****************************************************************************************************************************************************
-
-// TODO: KeyVaultClient is not done
 
 app.Run();
 
