@@ -7,9 +7,8 @@ public class NGServiceBusClient
     private ServiceBusSender _sender;
     private ServiceBusProcessor _processor;
     private Action<ServiceBusReceivedMessage> _inputHandler;
-    private string _queueName;
 
-    public NGServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueName, string queueNamespace, bool isDevelopment, CancellationToken cancellationToken = default)
+    public NGServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueNameSend, string queueNameReceive, string queueNamespace, bool isDevelopment, CancellationToken cancellationToken = default)
     {
         var clientOptions = new ServiceBusClientOptions
                             { 
@@ -22,11 +21,10 @@ public class NGServiceBusClient
         else
             _client = new ServiceBusClient(queueNamespace, new DefaultAzureCredential(), clientOptions);
 
-        _sender = _client.CreateSender(queueName);
-        _processor = _client.CreateProcessor(queueName, new ServiceBusProcessorOptions());
+        _sender = _client.CreateSender(queueNameSend);
+        _processor = _client.CreateProcessor(queueNameReceive, new ServiceBusProcessorOptions());
 
         _inputHandler = inputHandler;
-        _queueName = queueName;
 
         _processor.ProcessMessageAsync += MessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;

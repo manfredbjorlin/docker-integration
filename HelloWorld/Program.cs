@@ -25,7 +25,8 @@ var keyVaultUri = app.Configuration.GetValue<string>("VaultUri");
 
 var serviceBusClient = new NGServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
-    queueName: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueName", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNameSend: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueSendName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueSendName", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNameReceive: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueReceiveName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueReceiveName", keyVaultUri!, app.Environment.IsDevelopment()),
     queueNamespace: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusEndpoint")! : NGKeyVaultClient.GetSecret("ServiceBusNamespace", keyVaultUri!, app.Environment.IsDevelopment()),
     isDevelopment: app.Environment.IsDevelopment(),
     cancellationToken);
