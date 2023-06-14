@@ -1,6 +1,4 @@
-
-
-public static class NGKeyVaultClient
+public static class NGKeyVaultService
 {
     public static string? ApplicationName;
     public static string GetSecret(string name, string VaultUri, bool isDevelopment = false)

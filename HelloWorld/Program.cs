@@ -12,7 +12,7 @@ var app = builder.Build();
 Statics.Logger = app.Logger;
 
 NGLogger.LoggingLevel = app.Environment.IsDevelopment() ? NGLogger.LogLevel.Debug : NGLogger.LogLevel.Info;
-NGKeyVaultClient.ApplicationName = app.Environment.ApplicationName;
+NGKeyVaultService.ApplicationName = app.Environment.ApplicationName;
 
 app.Lifetime.ApplicationStarted.Register(() => NGLogger.WriteInfo("Application started..."));
 app.Lifetime.ApplicationStopping.Register(() => cancellationTokenSource.Cancel());
@@ -25,9 +25,9 @@ var keyVaultUri = app.Configuration.GetValue<string>("VaultUri");
 
 var serviceBusClient = new NGServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
-    queueNameSend: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueSendName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueSendName", keyVaultUri!, app.Environment.IsDevelopment()),
-    queueNameReceive: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueReceiveName")! : NGKeyVaultClient.GetSecret("ServiceBusQueueReceiveName", keyVaultUri!, app.Environment.IsDevelopment()),
-    queueNamespace: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusEndpoint")! : NGKeyVaultClient.GetSecret("ServiceBusNamespace", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNameSend: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueSendName")! : NGKeyVaultService.GetSecret("ServiceBusQueueSendName", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNameReceive: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueReceiveName")! : NGKeyVaultService.GetSecret("ServiceBusQueueReceiveName", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNamespace: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusEndpoint")! : NGKeyVaultService.GetSecret("ServiceBusNamespace", keyVaultUri!, app.Environment.IsDevelopment()),
     isDevelopment: app.Environment.IsDevelopment(),
     cancellationToken);
 
