@@ -7,9 +7,10 @@
 5. Create your mappers in Mappers/
 6. Remember to add a appsettings.Development.json in HelloWorld base directory, with "ServiceBusEndpoint", "ServiceBusQueueSendName", "ServiceBusQueueReceiveName" and "VaultUri" (use dev settings)
 7. Set VaultUri to the correct prod Vault uri in appsettings.json
-
 0. Write your tests in test project
+0. Add Secrets to keyvalt - see below
 
+## Secrets in Keyvault
 All secrets in Keyvault should be called ServiceName__SecretName. ServiceName will be added automatically by the KeyVault service.
 
 Secrets needed:
