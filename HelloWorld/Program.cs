@@ -53,7 +53,7 @@ app.MapPost("/Send", ([FromBody]PersonExample person) =>
 
 // If there is a polling:
 
-var ngTimerService = new NGTimerService(pollingDelayMs: 1000,
+var ngTimerService = new NGTimerService(pollingDelayMs: 10000,
                                         inputHandler: new TimerHandler(serviceBusClient).HandleMessage,
                                         cancellationToken);
 

@@ -9,6 +9,6 @@ public class TimerHandler
 
     public void HandleMessage()
     {
-        
+        NGLogger.WriteDebug("This is triggered every ms delay");
     }
 }
