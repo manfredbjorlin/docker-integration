@@ -6,17 +6,17 @@ public static class NGLogger
     public static void WriteInfo(string message)
     {
         if(LoggingLevel <= LogLevel.Info)
-            Statics.Logger!.LogInformation("Info :: " + message);
+            Statics.Logger!.LogInformation(message);
     }
 
     public static void WriteDebug(string message)
     {
         if(LoggingLevel == LogLevel.Debug)
-            Statics.Logger!.LogDebug("Debug :: " + message);
+            Statics.Logger!.LogDebug(message);
     }
 
     public static void WriteError(string message)
     {
-        Statics.Logger!.LogError("ERROR :: " + message);
+        Statics.Logger!.LogError(message);
     }
 }
