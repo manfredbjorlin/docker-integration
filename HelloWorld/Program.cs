@@ -31,7 +31,7 @@ var serviceBusClient = new NGServiceBusClient(
     cancellationToken);
 
 // Catch default 
-app.MapGet("/", () => "You shouldn't be here!")
+app.MapGet("/", () => "Go to /swagger to see the API Definition")
     .ExcludeFromDescription();
 
 #endregion
