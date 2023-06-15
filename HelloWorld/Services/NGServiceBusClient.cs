@@ -3,13 +3,16 @@
 //************************************
 public class NGServiceBusClient   
 {
-    private ServiceBusClient _client;
+    private ServiceBusClient? _client;
     private ServiceBusSender? _sender;
     private ServiceBusProcessor? _processor;
-    private Action<ServiceBusReceivedMessage> _inputHandler;
+    private Action<ServiceBusReceivedMessage>? _inputHandler;
 
     public NGServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueNameSend, string queueNameReceive, string queueNamespace, CancellationToken cancellationToken = default)
     {
+        if(string.IsNullOrEmpty(queueNamespace))
+            return;
+
         // This is to run on port 443 instead of 5-thousand-something
         var clientOptions = new ServiceBusClientOptions
                             { 
@@ -28,12 +31,19 @@ public class NGServiceBusClient
         _inputHandler = inputHandler;
         if(!string.IsNullOrEmpty(queueNameReceive))
         {
-            _processor = _client.CreateProcessor(queueNameReceive, new ServiceBusProcessorOptions());
+            if(_inputHandler == null)
+            {
+                Statics.Logger!.LogError("InputHandler is null");
+            }
+            else
+            {
+                _processor = _client.CreateProcessor(queueNameReceive, new ServiceBusProcessorOptions());
 
-            _processor.ProcessMessageAsync += MessageHandler;
-            _processor.ProcessErrorAsync += ErrorHandler;
+                _processor.ProcessMessageAsync += MessageHandler;
+                _processor.ProcessErrorAsync += ErrorHandler;
 
-            _processor.StartProcessingAsync();
+                _processor.StartProcessingAsync();
+            }
         }
 
         _ = new Timer(
@@ -65,7 +75,7 @@ public class NGServiceBusClient
     {
         NGLogger.WriteInfo($"Received message: {args.Message.MessageId}");
 
-        _inputHandler(args.Message);
+        _inputHandler!(args.Message);
 
         await args.CompleteMessageAsync(args.Message);
     }
