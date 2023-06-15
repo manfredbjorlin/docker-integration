@@ -8,7 +8,7 @@ public class NGServiceBusClient
     private ServiceBusProcessor? _processor;
     private Action<ServiceBusReceivedMessage> _inputHandler;
 
-    public NGServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueNameSend, string queueNameReceive, string queueNamespace, bool isDevelopment, CancellationToken cancellationToken = default)
+    public NGServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueNameSend, string queueNameReceive, string queueNamespace, CancellationToken cancellationToken = default)
     {
         // This is to run on port 443 instead of 5-thousand-something
         var clientOptions = new ServiceBusClientOptions
@@ -17,7 +17,7 @@ public class NGServiceBusClient
                             };
 
         
-        if(isDevelopment)
+        if(Statics.IsDevelopment)
             _client = new ServiceBusClient(queueNamespace, clientOptions);
         else
             _client = new ServiceBusClient(queueNamespace, new DefaultAzureCredential(), clientOptions);

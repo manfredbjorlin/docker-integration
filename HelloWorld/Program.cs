@@ -21,14 +21,14 @@ app.Lifetime.ApplicationStopped.Register(() => NGLogger.WriteInfo("Application s
 app.UseSwagger();
 app.UseSwaggerUI();
 
-NGKeyVaultService.Configuration = app.Configuration;
+Statics.Configuration = app.Configuration;
+Statics.IsDevelopment = app.Environment.IsDevelopment();
 
 var serviceBusClient = new NGServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
-    queueNameSend: NGKeyVaultService.GetSecret("ServiceBusQueueSendName", app.Environment.IsDevelopment()),
-    queueNameReceive: NGKeyVaultService.GetSecret("ServiceBusQueueReceiveName", app.Environment.IsDevelopment()),
-    queueNamespace: NGKeyVaultService.GetSecret("ServiceBusNamespace", app.Environment.IsDevelopment()),
-    isDevelopment: app.Environment.IsDevelopment(),
+    queueNameSend: NGKeyVaultService.GetSecret("ServiceBusQueueSendName"),
+    queueNameReceive: NGKeyVaultService.GetSecret("ServiceBusQueueReceiveName"),
+    queueNamespace: NGKeyVaultService.GetSecret("ServiceBusNamespace"),
     cancellationToken);
 
 // Catch default 
