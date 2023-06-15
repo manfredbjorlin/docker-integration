@@ -21,8 +21,3 @@ Secrets needed:
 
 Secrets must be created even if there is no send/receive. Empty values indicates not in use. E.g. empty receive name will not start receiver.
 
----
-
-## External resources
-
-_How to set up project and test: https://www.twilio.com/blog/test-aspnetcore-minimal-apis_
