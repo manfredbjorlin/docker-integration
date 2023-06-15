@@ -11,7 +11,7 @@
 0. Add Secrets to keyvalt - see below
 
 ## Secrets in Keyvault
-All secrets in Keyvault should be called ServiceName__SecretName. ServiceName will be added automatically by the KeyVault service.
+All secrets in Keyvault should be called ServiceName--SecretName. ServiceName will be added automatically by the KeyVault service.
 
 Secrets needed:
 
