@@ -1,6 +1,5 @@
 public static class NGKeyVaultService
 {
-    public static string? ApplicationName;
     public static string GetSecret(string name)
     {
         if(Statics.IsDevelopment)
@@ -8,6 +7,6 @@ public static class NGKeyVaultService
 
         var client = new SecretClient(vaultUri: new Uri(Statics.Configuration!.GetValue<string>("VaultUri")!), credential: new DefaultAzureCredential());
 
-        return client.GetSecret($"{ApplicationName}--{name}").Value.Value;
+        return client.GetSecret($"{Statics.ApplicationName}--{name}").Value.Value;
     } 
 }

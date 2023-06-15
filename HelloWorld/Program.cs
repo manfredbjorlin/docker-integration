@@ -10,9 +10,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 Statics.Logger = app.Logger;
+Statics.Configuration = app.Configuration;
+Statics.IsDevelopment = app.Environment.IsDevelopment();
+Statics.ApplicationName = app.Environment.ApplicationName;
 
 NGLogger.LoggingLevel = app.Environment.IsDevelopment() ? NGLogger.LogLevel.Debug : NGLogger.LogLevel.Info;
-NGKeyVaultService.ApplicationName = app.Environment.ApplicationName;
 
 app.Lifetime.ApplicationStarted.Register(() => NGLogger.WriteInfo("Application started..."));
 app.Lifetime.ApplicationStopping.Register(() => cancellationTokenSource.Cancel());
@@ -20,9 +22,6 @@ app.Lifetime.ApplicationStopped.Register(() => NGLogger.WriteInfo("Application s
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-Statics.Configuration = app.Configuration;
-Statics.IsDevelopment = app.Environment.IsDevelopment();
 
 var serviceBusClient = new NGServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
