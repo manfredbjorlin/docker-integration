@@ -1,18 +1,13 @@
 public static class NGKeyVaultService
 {
     public static string? ApplicationName;
-    public static string GetSecret(string name, string VaultUri, bool isDevelopment = false)
+    public static IConfiguration? Configuration;
+    public static string GetSecret(string name, bool isDevelopment = false)
     {
         if(isDevelopment)
-            return name switch
-            {
-                "ServiceBusQueueName" => "testqueue",
-                "ServiceBusNamespace" => "ngsbtest.servicebus.windows.net",
-                "VaultUri" => "https://ng-keyvault-test.vault.azure.net/",
-                _ => "Wut?"
-            };
+            return Configuration!.GetValue<string>(name) ?? string.Empty;
 
-        var client = new SecretClient(vaultUri: new Uri(VaultUri), credential: new DefaultAzureCredential());
+        var client = new SecretClient(vaultUri: new Uri(Configuration!.GetValue<string>("VaultUri")!), credential: new DefaultAzureCredential());
 
         return client.GetSecret($"{ApplicationName}--{name}").Value.Value;
     } 

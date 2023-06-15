@@ -21,13 +21,13 @@ app.Lifetime.ApplicationStopped.Register(() => NGLogger.WriteInfo("Application s
 app.UseSwagger();
 app.UseSwaggerUI();
 
-var keyVaultUri = app.Configuration.GetValue<string>("VaultUri");
+NGKeyVaultService.Configuration = app.Configuration;
 
 var serviceBusClient = new NGServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
-    queueNameSend: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueSendName")! : NGKeyVaultService.GetSecret("ServiceBusQueueSendName", keyVaultUri!, app.Environment.IsDevelopment()),
-    queueNameReceive: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusQueueReceiveName")! : NGKeyVaultService.GetSecret("ServiceBusQueueReceiveName", keyVaultUri!, app.Environment.IsDevelopment()),
-    queueNamespace: app.Environment.IsDevelopment() ? app.Configuration.GetValue<string>("ServiceBusEndpoint")! : NGKeyVaultService.GetSecret("ServiceBusNamespace", keyVaultUri!, app.Environment.IsDevelopment()),
+    queueNameSend: NGKeyVaultService.GetSecret("ServiceBusQueueSendName", app.Environment.IsDevelopment()),
+    queueNameReceive: NGKeyVaultService.GetSecret("ServiceBusQueueReceiveName", app.Environment.IsDevelopment()),
+    queueNamespace: NGKeyVaultService.GetSecret("ServiceBusNamespace", app.Environment.IsDevelopment()),
     isDevelopment: app.Environment.IsDevelopment(),
     cancellationToken);
 
@@ -58,8 +58,8 @@ app.MapPost("/Send", ([FromBody]PersonExample person) =>
 // If there is a polling - add a ms delay. Timeout.Infinite will make the timer never start
 
 _ = new NGTimerService(pollingDelayMs: Timeout.Infinite,
-                                        inputHandler: new TimerHandler(serviceBusClient).HandleMessage,
-                                        cancellationToken);
+                        inputHandler: new TimerHandler(serviceBusClient).HandleMessage,
+                        cancellationToken);
 
 // EDIT ABOVE THIS LINE
 // *****************************************************************************************************************************************************
