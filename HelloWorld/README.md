@@ -21,3 +21,7 @@ Secrets needed:
 
 Secrets must be created even if there is no send/receive. Empty values indicates not in use. E.g. empty receive name will not start receiver.
 
+**For local development, these three has to be added to appsettings.Development.json**
+
+So your appsettings.Development.json should be a copy of appsettings.json, but with these three extra keys, on the same level as the VaultUri
+
