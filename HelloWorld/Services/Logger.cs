@@ -1,4 +1,4 @@
-public static class NGLogger
+public static class Logger
 {
     public enum LogLevel{Debug, Info, Error}
 

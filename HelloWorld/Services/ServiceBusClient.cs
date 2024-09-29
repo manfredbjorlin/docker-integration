@@ -1,14 +1,14 @@
 //************************************
 // Don't change anything in this file
 //************************************
-public class NGServiceBusClient   
+public class ServiceBusClient   
 {
-    private ServiceBusClient? _client;
+    private Azure.Messaging.ServiceBus.ServiceBusClient? _client;
     private ServiceBusSender? _sender;
     private ServiceBusProcessor? _processor;
     private Action<ServiceBusReceivedMessage>? _inputHandler;
 
-    public NGServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueNameSend, string queueNameReceive, string queueNamespace, CancellationToken cancellationToken = default)
+    public ServiceBusClient(Action<ServiceBusReceivedMessage> inputHandler, string queueNameSend, string queueNameReceive, string queueNamespace, CancellationToken cancellationToken = default)
     {
         if(string.IsNullOrEmpty(queueNamespace))
             return;
@@ -21,9 +21,9 @@ public class NGServiceBusClient
 
         
         if(Statics.IsDevelopment)
-            _client = new ServiceBusClient(queueNamespace, clientOptions);
+            _client = new Azure.Messaging.ServiceBus.ServiceBusClient(queueNamespace, clientOptions);
         else
-            _client = new ServiceBusClient(queueNamespace, new DefaultAzureCredential(), clientOptions);
+            _client = new Azure.Messaging.ServiceBus.ServiceBusClient(queueNamespace, new DefaultAzureCredential(), clientOptions);
 
         if(!string.IsNullOrEmpty(queueNameSend))
             _sender = _client.CreateSender(queueNameSend);
@@ -62,7 +62,7 @@ public class NGServiceBusClient
                     
                     _client.DisposeAsync();
 
-                    NGLogger.WriteInfo("ServiceBus Client disposed...");
+                    Logger.WriteInfo("ServiceBus Client disposed...");
                 }
             },
             null,
@@ -73,7 +73,7 @@ public class NGServiceBusClient
 
     async Task MessageHandler(ProcessMessageEventArgs args)
     {
-        NGLogger.WriteInfo($"Received message: {args.Message.MessageId}");
+        Logger.WriteInfo($"Received message: {args.Message.MessageId}");
 
         _inputHandler!(args.Message);
 
@@ -82,7 +82,7 @@ public class NGServiceBusClient
 
     Task ErrorHandler(ProcessErrorEventArgs args)
     {
-        NGLogger.WriteError($"Exception when handling message: {args.Exception.Message}");
+        Logger.WriteError($"Exception when handling message: {args.Exception.Message}");
         return Task.CompletedTask;
     }
 
@@ -90,7 +90,7 @@ public class NGServiceBusClient
     {
         if(_sender == null)
         {
-            NGLogger.WriteError("ServiceBus Send Queue is not configured. Message dropped!");
+            Logger.WriteError("ServiceBus Send Queue is not configured. Message dropped!");
             return;
         }
 
@@ -102,22 +102,22 @@ public class NGServiceBusClient
             {
                 if(!messageBatch.TryAddMessage(new ServiceBusMessage(message)))
                 {
-                    NGLogger.WriteError($"Could not add message: {message}");
+                    Logger.WriteError($"Could not add message: {message}");
                 }
             }
             catch(InvalidOperationException)
             {
-                NGLogger.WriteError($"Invalid operation adding message: {message}");
+                Logger.WriteError($"Invalid operation adding message: {message}");
             }
             catch(System.Runtime.Serialization.SerializationException)
             {
-                NGLogger.WriteError($"Unable to serialize message: {message}");
+                Logger.WriteError($"Unable to serialize message: {message}");
             }
         }
 
         await _sender.SendMessagesAsync(messageBatch);
 
-        NGLogger.WriteInfo($"Message batch sent. Batch contained {messages.Length} message(s).");
+        Logger.WriteInfo($"Message batch sent. Batch contained {messages.Length} message(s).");
     }
 }
 

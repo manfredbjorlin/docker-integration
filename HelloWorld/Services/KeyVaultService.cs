@@ -1,4 +1,4 @@
-public static class NGKeyVaultService
+public static class KeyVaultService
 {
     public static string GetSecret(string name)
     {

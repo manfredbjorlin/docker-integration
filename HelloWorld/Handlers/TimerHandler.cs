@@ -1,7 +1,7 @@
 public class TimerHandler
 {
-    NGServiceBusClient _serviceBusClient;
-    public TimerHandler(NGServiceBusClient serviceBusClient)
+    ServiceBusClient _serviceBusClient;
+    public TimerHandler(ServiceBusClient serviceBusClient)
     {
         _serviceBusClient = serviceBusClient;
 
@@ -9,6 +9,6 @@ public class TimerHandler
 
     public void HandleMessage()
     {
-        NGLogger.WriteDebug("This is triggered every ms delay");
+        Logger.WriteDebug("This is triggered every ms delay");
     }
 }

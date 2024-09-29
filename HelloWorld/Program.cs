@@ -14,20 +14,20 @@ Statics.Configuration = app.Configuration;
 Statics.IsDevelopment = app.Environment.IsDevelopment();
 Statics.ApplicationName = app.Environment.ApplicationName;
 
-NGLogger.LoggingLevel = app.Environment.IsDevelopment() ? NGLogger.LogLevel.Debug : NGLogger.LogLevel.Info;
+Logger.LoggingLevel = app.Environment.IsDevelopment() ? Logger.LogLevel.Debug : Logger.LogLevel.Info;
 
-app.Lifetime.ApplicationStarted.Register(() => NGLogger.WriteInfo("Application started..."));
+app.Lifetime.ApplicationStarted.Register(() => Logger.WriteInfo("Application started..."));
 app.Lifetime.ApplicationStopping.Register(() => cancellationTokenSource.Cancel());
-app.Lifetime.ApplicationStopped.Register(() => NGLogger.WriteInfo("Application stopped..."));
+app.Lifetime.ApplicationStopped.Register(() => Logger.WriteInfo("Application stopped..."));
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-var serviceBusClient = new NGServiceBusClient(
+var serviceBusClient = new ServiceBusClient(
     inputHandler: new ServiceBusHandler().HandleMessage,
-    queueNameSend: NGKeyVaultService.GetSecret("ServiceBusQueueSendName"),
-    queueNameReceive: NGKeyVaultService.GetSecret("ServiceBusQueueReceiveName"),
-    queueNamespace: NGKeyVaultService.GetSecret("ServiceBusNamespace"),
+    queueNameSend: KeyVaultService.GetSecret("ServiceBusQueueSendName"),
+    queueNameReceive: KeyVaultService.GetSecret("ServiceBusQueueReceiveName"),
+    queueNamespace: KeyVaultService.GetSecret("ServiceBusNamespace"),
     cancellationToken);
 
 // Catch default 
@@ -56,7 +56,7 @@ app.MapPost("/Send", ([FromBody]PersonExample person) =>
 
 // If there is a polling - add a ms delay. Timeout.Infinite will make the timer never start
 
-_ = new NGTimerService(pollingDelayMs: Timeout.Infinite,
+_ = new TimerService(pollingDelayMs: Timeout.Infinite,
                         inputHandler: new TimerHandler(serviceBusClient).HandleMessage,
                         cancellationToken);
 

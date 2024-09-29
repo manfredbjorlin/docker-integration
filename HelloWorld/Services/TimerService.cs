@@ -1,8 +1,8 @@
-public class NGTimerService
+public class TimerService
 {
     private int _pollingDelayMs;
     private Action _inputHandler;
-    public NGTimerService(int pollingDelayMs, Action inputHandler, CancellationToken cancellationToken)
+    public TimerService(int pollingDelayMs, Action inputHandler, CancellationToken cancellationToken)
     {
         _pollingDelayMs = pollingDelayMs;
         _inputHandler = inputHandler;
